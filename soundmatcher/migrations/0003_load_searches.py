@@ -5,23 +5,30 @@ import csv
 import os
 
 from soundmatcher.models import Recording, Search
-from soundmatcher.utils import int_or_default
+from soundmatcher.utils import int_or_default, calc_similarity
 
 csv_path = os.path.join(os.path.dirname(__file__), '../raw_data/sound_recordings_input_report.csv')
 
 def load_searches(apps, schema_editor):
 	with open(csv_path) as csvfile:
 		reader = csv.DictReader(csvfile)
-		recording = Recording.objects.get(id=1)
+		recordings = Recording.objects.all()
 		for row in reader:
-			Search(
+			search = Search(
 				artist = row['artist'],
 				title = row['title'],
 				isrc = row['isrc'],
 				duration = int_or_default(row['duration']),
-				recording = recording,
-				score = 0
-			).save()
+			)
+			search.score = 9999
+			search.recording = recordings.first()
+			for recording in recordings:
+				score = calc_similarity(search, recording)
+				if score < search.score:
+					search.score = score
+					search.recording = recording
+
+			search.save()
 
 def delete_searches(apps, schema_editor):
 	Search.objects.all().delete()
