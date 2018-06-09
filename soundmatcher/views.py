@@ -3,11 +3,11 @@ from django.core import serializers
 from django.shortcuts import render
 
 from .models import Search, Match
+from django.shortcuts import redirect
 
 
 def index(request):
-	return render(request, 'soundmatcher/index.html')
-
+	return redirect('/static/index.html', permanent=True)
 
 def searches(request):
 	return _jsonResponse(Search.objects.all())
