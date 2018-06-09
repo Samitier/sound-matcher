@@ -1,9 +1,9 @@
 from django.db import models
 
-# Same attributes in Recording and search. 
-# Maybe inheritance would be better than repeating the model.
 
-class Recording(models.Model):
+
+# Base abstract class for the recording info
+class RecordingInfo(models.Model):
 	artist = models.CharField(max_length=200)
 	title = models.CharField(max_length=200)
 	isrc = models.CharField(max_length=200)
@@ -12,15 +12,19 @@ class Recording(models.Model):
 	def __str__(self):
 		return self.artist + ' - ' + self.title
 
+	class Meta:
+		abstract = True
 
-class Search(models.Model):
-	artist = models.CharField(max_length=200)
-	title = models.CharField(max_length=200)
-	isrc = models.CharField(max_length=200)
-	duration = models.IntegerField()
 
+class Recording(RecordingInfo):
+	pass
+
+
+class Search(RecordingInfo):
+	pass
+
+
+class Match(models.Model):
 	recording = models.ForeignKey(Recording, on_delete=models.CASCADE)
-	score = models.IntegerField(default=0)
-
-	def __str__(self):
-		return self.artist + ' - ' + self.title
+	search = models.ForeignKey(Search, on_delete=models.CASCADE)
+	score = models.IntegerField(default=9999)

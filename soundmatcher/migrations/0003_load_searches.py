@@ -4,8 +4,9 @@ from django.db import migrations
 import csv
 import os
 
-from soundmatcher.models import Recording, Search
-from soundmatcher.utils import int_or_default, calc_similarity
+from soundmatcher.models import Recording, Search, Match
+from soundmatcher.utils import int_or_default
+from soundmatcher.services.similarity import get_similarity_score
 
 csv_path = os.path.join(os.path.dirname(__file__), '../raw_data/sound_recordings_input_report.csv')
 
@@ -20,15 +21,14 @@ def load_searches(apps, schema_editor):
 				isrc = row['isrc'],
 				duration = int_or_default(row['duration']),
 			)
-			search.score = 9999
-			search.recording = recordings.first()
-			for recording in recordings:
-				score = calc_similarity(search, recording)
-				if score < search.score:
-					search.score = score
-					search.recording = recording
-
 			search.save()
+
+			for recording in recordings:
+				Match(
+					score = get_similarity_score(search, recording),
+					search = search,
+					recording = recording
+				).save()
 
 def delete_searches(apps, schema_editor):
 	Search.objects.all().delete()
