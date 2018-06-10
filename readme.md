@@ -40,7 +40,7 @@ First of all, this is the first time I use Django. Sorry if the code is a bit me
 
 Since this exercise is about seeding a database I decided to put all the code as a Django migration in the folder `soundmatcher/migrations`.
 
-I also created 3 models: Recording (the data from sound_recordings.csv), Search (the data from sound_recordings_input_report.csv), and Match (the relationship between a search and a Recording, with a score).
+I also created 3 models: `Recording` (the data from `sound_recordings.csv`), `Search` (the data from `sound_recordings_input_report.csv`), and `Match` (the relationship between a `Search` and a `Recording`, with a score).
 
 ### The matching method (Question 1)
 
@@ -62,7 +62,7 @@ No, this solution is not scalable for a lot of reasons.
 
 The main problem is that we will be comparing and potentially storing results for the combination of all the inputs with all the sounds. That can quickly create a table too big to handle.
 
-Besides, we are loading all the songs to the RAM each time we calculate the scores. A lot of songs could cause performance issues in that part of the code.
+Besides, we are looking through all the songs each time we load a search. This will probably break too, since we are calculating millions of scores each time.
 
 ### Improvements (Question 3)
 
@@ -86,13 +86,13 @@ For this use case we want to make the user select an input from a list of availa
 
 I thought that a dropdown list would be great for this, since it will not fill a lot of space in the screen and its one of the most common elements in a UI and everybody knows how to use it.
 
-When the user selects something, another list will appear with all the matches. Until then there is nothing occupying space and distracting the user.
+When the user selects something, another list will appear with all the matches. Until then, there is nothing occupying space and distracting the user.
 
 The matches will be sorted by their score, and they color will fade the lower their score is. This will cause a contrast between the important matches and the false positives.
 
 ### Improvements (Question 2)
 
-First of all I would add some animations. Animations guide the user between interactions and gratly improve the usability of an interface.
+First of all I would add some animations (like a loading animation for the matches). Animations guide the user between interactions and gratly improve the usability of an interface.
 
 Then I would make the interface a bit better for desktop. I designed this for desktop and mobile, but for desktop there is a lot of empty space.
 
