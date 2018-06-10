@@ -1,18 +1,28 @@
 from soundmatcher.models import Recording, Search
 
+min_steps = 0
+max_recording_duration_steps = 20
 
-# Similarity  score between a search and a recording will be given as the mean of the number of
+# At a greater score than score_threshold, the search and the sound will be declared 100% different
+steps_threshold = 20
+
+# Returns the percentage of confidence in which the algorithm thinks two sounds are the same or not.
+def get_similarity_percent(search: Search, recording: Recording):
+	steps = get_similarity_steps(search, recording)
+	return (abs(steps_threshold - min(steps, steps_threshold)) / steps_threshold) * 100
+
+# Similarity steps between a search and a recording are the mean of the number of
 # changes needed to reach the recording for every property of search.
 # IE: it will return 0 if search is completely equal to recording
-#	1 if search and the recording differ only by one character change, etc
-def get_similarity_score(search: Search, recording: Recording):
+#	n if search and the recording differ by n character changes in every prop, etc
+def get_similarity_steps(search: Search, recording: Recording):
 	steps = []
 	# Since IRSC is a unique identifier, if a search has the same isrc of a recording, then the
 	# similarity will be the maximum possible. If not, the levenshtein algorithm will be used, in
 	# case there's a typo in the search's isrc.
 	if search.isrc != '' and recording.isrc != '':
 		if search.isrc == recording.isrc:
-			return 0
+			return min_steps
 		else:
 			steps.append(_levenshtein(search.isrc, recording.isrc))
 	# For every other field, if the values exist in both search and recording, we will use the levenshtein
@@ -22,13 +32,15 @@ def get_similarity_score(search: Search, recording: Recording):
 	if search.title != '' and recording.title != '':
 		steps.append(_levenshtein(search.title, recording.title))
 	# Since the duration is an integer, the similarity will be based on how close are both values
-	# of each other.
+	# of each other. We give it a max value to not break the rest of the ponderations when calculating
+	# the mean.
 	if search.duration > 0 and recording.duration > 0:
-		steps.append(abs(search.duration - recording.duration))
-	# If there are no steps, that means that the search or the recording were empty and it should return
+		duration_steps = abs(search.duration - recording.duration)
+		steps.append(min(duration_steps, max_recording_duration_steps))
+	# If there are no steps, that means that the search or the recording was empty and it should return
 	# maximum inequality.
 	if len(steps) == 0:
-		return 9999
+		return steps_threshold
 	# Else we return the mean of all the steps needed to reach the recording values for each prop.
 	return sum(steps[0:len(steps)]) / len(steps)
 

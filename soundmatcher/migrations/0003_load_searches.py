@@ -6,7 +6,7 @@ import os
 
 from soundmatcher.models import Recording, Search, Match
 from soundmatcher.utils import int_or_default
-from soundmatcher.services.similarity import get_similarity_score
+from soundmatcher.services.similarity import get_similarity_percent
 
 csv_path = os.path.join(os.path.dirname(__file__), '../raw_data/sound_recordings_input_report.csv')
 
@@ -24,11 +24,13 @@ def load_searches(apps, schema_editor):
 			search.save()
 
 			for recording in recordings:
-				Match(
-					score = get_similarity_score(search, recording),
-					search = search,
-					recording = recording
-				).save()
+				score = get_similarity_percent(search, recording)
+				if score > 0:
+					Match(
+						score = score,
+						search = search,
+						recording = recording
+					).save()
 
 def delete_searches(apps, schema_editor):
 	Search.objects.all().delete()

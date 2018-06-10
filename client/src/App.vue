@@ -1,24 +1,36 @@
 <template>
-  <div id="app">
-	  
-  </div>
+	<div id="app">
+		<SearchSelector/>
+		<MatchList/>
+	</div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import HelloWorld from "./components/HelloWorld.vue"
+import { Action } from "vuex-class"
+import SearchSelector from "./components/search-selector.vue"
+import MatchList from "./components/match-list.vue"
 
-@Component
-export default class App extends Vue {}
+@Component({
+	components: { SearchSelector, MatchList }
+})
+export default class App extends Vue {
+
+	@Action fetchSearches: () => any
+
+	async mounted() {
+		this.fetchSearches()
+	}
+}
 </script>
 
 <style lang="stylus">
+@import "./styles"
+
 #app
-	font-family 'Avenir', Helvetica, Arial, sans-serif
-	-webkit-font-smoothing antialiased
-	-moz-osx-font-smoothing grayscale
 	text-align center
-	color #2c3e50
-	margin-top 60px
+	padding 2em
+	max-width 500px
+	margin auto
 
 </style>
