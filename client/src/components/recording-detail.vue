@@ -1,5 +1,5 @@
 <template>
-	<article class="recording-detail">
+	<article class="recording-detail" :class="selectable && 'selectable'">
 		<h3 class="title">
 			{{ recording.title }}
 		</h3>
@@ -22,16 +22,19 @@ import { Component, Vue, Prop } from "vue-property-decorator"
 @Component
 export default class RecordingDetail extends Vue {
 	@Prop() recording: any
+	@Prop() selectable: boolean
 }
 </script>
 
 <style lang="stylus" scoped>
 	.recording-detail
 		padding .5em 0
-		opacity 0.6
-		transition opacity 0.3s
-		&:hover
-			opacity 0.9
+		&.selectable
+			cursor: pointer
+			opacity 0.6
+			transition opacity 0.3s
+			&:hover
+				opacity 0.9
 	.title, .description
 		text-transform uppercase
 		font-size 15px

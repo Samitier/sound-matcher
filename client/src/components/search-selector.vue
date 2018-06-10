@@ -1,10 +1,10 @@
 <template>
 	<section>
 		<div ref="selectedSearch" class="selected-search">
-			<div v-if="selectedSearch">
-				<RecordingDetail :recording="selectedSearch"/>
+			<div v-if="selectedSearch" class="ellipsis">
+				<RecordingDetail :recording="selectedSearch" :selectable="true"/>
 			</div>
-			<div v-else class="placeholder">
+			<div v-else class="placeholder ellipsis">
 				Select an input report to see its candidates
 			</div>
 			<i class="material-icons caret">keyboard_arrow_down</i>
@@ -15,7 +15,7 @@
 				:key="search.id"
 				@click="selectSearch(search)"
 			>
-				<RecordingDetail :recording="search"/>
+				<RecordingDetail :recording="search" :selectable="true"/>
 			</div>
 		</div>
 	</section>
@@ -65,9 +65,6 @@ export default class SearchSelector extends Vue {
 		.placeholder
 			color #636c72
 		>div
-			white-space nowrap
-			overflow hidden
-			text-overflow ellipsis
 			padding-right 1.3em
 	.caret
 		position absolute
@@ -81,6 +78,5 @@ export default class SearchSelector extends Vue {
 		text-align left
 		padding .7em 1.2em
 		max-height 500px
-		cursor pointer
 		overflow auto
 </style>
