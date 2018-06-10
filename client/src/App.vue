@@ -30,7 +30,7 @@ export default class App extends Vue {
 #app
 	text-align center
 	padding 2em
-	max-width 500px
+	max-width 800px
 	margin auto
 
 </style>
