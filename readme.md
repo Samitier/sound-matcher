@@ -76,7 +76,7 @@ Other ideas could be storing the songs in an in-memory database like redis and c
 
 ### Introduction
 
-For this part, I implemented an app with Vue, Vuex and Typescript, and a JSON api in Django, for fetching the data.
+For this part, I implemented an app with Vue, Vuex and Typescript. I also made a JSON api in Django with Django Rest Framework, for fetching the data from the DB.
 
 ### Layout (Question 1)
 
@@ -94,5 +94,6 @@ The matches will be sorted by their score, and they color will fade the lower th
 
 First of all I would add some animations (like a loading animation for the matches). Animations guide the user between interactions and gratly improve the usability of an interface.
 
-Then I would make the interface a bit better for desktop. I designed this for desktop and mobile, but for desktop there is a lot of empty space.
+Another improvement could be filtering the elements of the dropdown with a text search field on the dropdown itself.
 
+Finally, I would make the interface a bit better for desktop. I designed this for desktop and mobile, but for desktop there is a lot of empty space.
